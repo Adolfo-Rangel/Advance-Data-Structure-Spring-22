@@ -1,9 +1,5 @@
 package com.mycompany.bstimpl;
 
-/**
- *
- * @author juneja_u
- */
 public class BST {
    private Node root;
     
