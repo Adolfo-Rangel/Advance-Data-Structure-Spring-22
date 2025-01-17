@@ -1,4 +1,4 @@
-# Advanced Data Structures - Spring 2023
+# Advanced Data Structures - Spring 2023** 
 
 Welcome to the **Advanced Data Structures** course for Spring 2023! This course delves into the design, analysis, and implementation of advanced data structures, enabling efficient problem-solving in computational tasks.
 
