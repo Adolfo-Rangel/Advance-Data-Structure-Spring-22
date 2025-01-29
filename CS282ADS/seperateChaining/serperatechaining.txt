@@ -1,0 +1,249 @@
+In my SeperateChaining.java class I want you to look at my BST.java class and Node.java class, modify and make the following changes:
+
+1. You can use the SeparateChaining class as a starting point.
+
+2. Instead of using a linked list to resolve collisions, as in separate chaining, use a binary search tree. That is, create a hash table that is an array of trees.
+
+3. To display a small tree based hashtable , you can use an inorder traversal of each tree.
+
+4. Please do not import any in-built java classes for this project.
+
+Here is the criteria: This hashtable should be using BSTs instead of linked list. The data that needs to be inserted or deleted is a Student record. Implement methods , insert , delete search and display. This class is tested via main method. To earn full credit we have to All the methods are implemented correctly , No in-built data structures are used. BSTs are used to store data at a particular index.
+
+Here is my code down below as a reference:
+
+public class Node { //NODE CLASS
+    int data;
+    Node left;
+    Node right;
+
+    public Node(){
+
+    }
+    public Node(int data){
+        this.data = data;
+
+    }
+}
+___________________________________________
+
+public class BST { //BST CLASS
+    private Node root;
+
+    public BST(){
+        root = null;
+    }
+    public Node search(int key){
+        Node curr = root;
+        while(curr != null){
+            if(key < curr.data){
+                curr = curr.left;
+            }
+            else if(key > curr.data){
+                curr = curr.right;
+            }
+            else
+                return curr;
+        }
+        return curr;
+    }
+
+    public void insert(int data){
+        Node n = new Node(data);
+        Node parent;
+        Node curr = root;
+        if(root == null){
+            root = n;
+            return;
+        }
+
+
+        while(true){
+            parent = curr;
+            if(data < curr.data){
+                //parent = curr;
+                curr = curr.left;
+                if(curr == null){
+                    parent.left = n;
+                    break;
+                }
+
+            }
+            else if(data > curr.data){
+                //parent = curr;
+                curr = curr.right;
+                if(curr == null){
+                    parent.right = n;
+                    break;
+                }
+
+            }
+
+        }
+    }
+    public void inorder(){
+        inorder(root);
+    }
+    private void inorder(Node curr){
+        if(curr != null){
+            inorder(curr.left);
+            System.out.print(curr.data+ " ");
+            inorder(curr.right);
+        }
+
+    }
+    public void preorder(){
+        preorder(root);
+    }
+    private void preorder(Node curr){
+        if(curr != null){
+            System.out.print(curr.data+ " ");
+            preorder(curr.left);
+            preorder(curr.right);
+        }
+
+    }
+    public void postorder(){
+        postorder(root);
+    }
+    private void postorder(Node curr){
+        if(curr != null){
+            postorder(curr.left);
+            postorder(curr.right);
+            System.out.print(curr.data+ " ");
+        }
+
+    }
+    public int min(){
+        Node parent = root;
+        Node curr = root;
+        while(curr != null){
+            parent = curr;
+            curr = curr.left;
+        }
+        return parent.data;
+    }
+    public boolean delete(int item){
+        Node parent = root;
+        Node curr = root;
+        boolean isLeft = true;
+        while(curr.data != item){
+            parent = curr;
+            if(curr == null){
+                return false;
+            }
+            if(item < curr.data){
+                isLeft = true;
+                curr = curr.left;
+            }
+            else{
+                isLeft = false;
+                curr = curr.right;
+            }
+        }
+        //found it
+        //check if it is a leaf node
+        if(curr.right == null && curr.left == null){
+            if(curr == root)
+                root = null;
+            else if(isLeft)
+                parent.left = null;
+            else
+                parent.right = null;
+        }//check if a node has right child only
+        else if(curr.left == null){
+            if(curr == root)
+                root = curr.right;
+            else if(isLeft)
+                parent.left = curr.right;
+            else
+                parent.right = curr.right;
+
+        }//if a node has left child only
+        else if(curr.right == null){
+            if(curr == root)
+                root = curr.left;
+            else if(isLeft)
+                parent.left = curr.left;
+            else
+                parent.right = curr.left;
+        }
+        else{
+            Node successor = getSuccessor(curr);
+            if (curr == root) {
+                root = successor;
+                successor.left = curr.left;
+                successor.right = curr.right;
+            } else if (isLeft) {
+                parent.left = successor;
+                successor.left = curr.left;
+                successor.right = curr.right;
+            } else {
+                parent.right = successor;
+                successor.left = curr.left;
+                successor.right = curr.right;
+            }
+        }
+        return true;
+    }
+
+    public Node getSuccessor(Node n){
+        Node curr = n;
+        Node parent = n;
+        Node successor = n.right;
+
+        while(successor.left != null){
+            parent = curr;
+            curr = successor;
+            successor = successor.left;
+        }
+
+        if(successor != n.right)
+            curr.left = successor.right;
+        return successor;
+    }
+
+}
+__________________________________________________
+
+public class SeparateChaining {
+    SortedLinkedList[] hashtable;
+
+    public SeparateChaining(){
+        hashtable = new SortedLinkedList[5];
+        for(int i = 0 ; i < 5 ; i++)
+            hashtable[i] = new SortedLinkedList();
+    }
+    public int hash(int key){
+        return key%5;
+    }
+    public void insert(Student s){
+        int index = hash(s.id);
+        hashtable[index].insert(s);
+    }
+    public void delete(int id){
+        int index = hash(id);
+        hashtable[index].delete(id);
+    }
+    public void search(int id){
+        int index = hash(id);
+        hashtable[index].search(id);
+    }
+    public void display(){
+        for(int i = 0 ; i < 5 ; i++){
+            hashtable[i].display();
+        }
+    }
+}
+//end of code
+/* Student result = hash.search(6);
+        if (result != null) {
+            System.out.println("Found student " + result.getName() + " with ID " + result.getId());
+        } else {
+            System.out.println("Student not found");
+        }
+
+        hash.delete(1);
+
+        hash.display();
+        */
